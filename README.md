@@ -51,6 +51,7 @@ Structy's C implementation is written specifically with microcontrollers in mind
 - **Never** uses the heap
 - Uses very very little stack space
 - Compiles cleanly with `-Werror -Wall -Wextra -Wpedantic -std=c17`
+- It includes optional support for `libfixmath`'s `fix16_t`.
 
 
 ### Including Structy's runtime
@@ -112,3 +113,55 @@ Since the runtime is designed for embedded systems, Structy doesn't hardcode `pr
 ```
 
 By default, Structy will try to use `<stdio.h>`'s `printf` if you're on a big girl computer. If you're on a 32-bit ARM system, Structy will check and see if you have [mpland's embedded-friendly printf](https://github.com/mpaland/printf) and use that if you have it. Otherwise, it'll disable printing.
+
+## Python implementation
+
+Structy's Python implementation is written to be simple, not fast. Some notes:
+
+- The runtime depends on Python 3.7+
+- The runtime uses type annotations heavily.
+- The runtime includes a very basic implementation of `Q16.16` fixed-point math called `fix16`. It's included because I often work with `libfixmath` on microcontrollers.
+
+### Including Structy's runtime
+
+The runtime is included with the `structy_generator` package. It's import name is `structy`.
+
+
+### Using generated code
+
+The Structy generates the struct as a [dataclass](https://docs.python.org/3/library/dataclasses.html) in its own module.
+
+### Initialization
+
+```py
+# Default values.
+inst = StructName()
+# Override default value
+inst = StructName(field_name=something)
+```
+
+Since it's a dataclass, an empty constructor gives the default specified in the `.structy` definition file, but you can pass keyword arguments to override them.
+
+### Pack
+
+```python
+result: bytes = inst.pack()
+```
+
+Packs an instance and returns a `bytes` object with the data. `len(result)` will be `StructName.PACKED_SIZE`.
+
+### Unpack
+
+```python
+inst = StructName.unpack(data)
+```
+
+Unpacks the `bytes`-like buffer into a new instance. The buffer must be at least `StructName.PACKED_SIZE` long.
+
+### Print
+
+Since a Structy Struct is just a dataclass, it uses the [dataclass __str__ and __repr__](https://docs.python.org/3/reference/datamodel.html#object.__repr__).
+
+## License
+
+The Structy generator and runtime components are all published under the MIT license. See [LICENSE](LICENSE) for the full text.

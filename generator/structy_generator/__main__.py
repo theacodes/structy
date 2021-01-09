@@ -1,5 +1,9 @@
 #!/usr/env/bin python3
 
+# Copyright (c) 2021 Alethea Katherine Flowers.
+# Published under the standard MIT License.
+# Full text available at: https://opensource.org/licenses/MIT
+
 import argparse
 import datetime
 import pathlib

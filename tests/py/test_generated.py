@@ -1,4 +1,8 @@
-import structy
+# Copyright (c) 2021 Alethea Katherine Flowers.
+# Published under the standard MIT License.
+# Full text available at: https://opensource.org/licenses/MIT
+
+import fix16
 
 import gemsettings
 
@@ -93,16 +97,16 @@ def test_generated_unpack():
     assert inst.adc_gain_corr == 2048
     assert inst.adc_offset_corr == 0
     assert inst.led_brightness == 127
-    assert inst.castor_knob_min == structy.Fix16(-1.01)
-    assert inst.castor_knob_max == structy.Fix16(1.01)
-    assert inst.pollux_knob_min == structy.Fix16(-1.01)
-    assert inst.pollux_knob_max == structy.Fix16(1.01)
-    assert inst.chorus_max_intensity == structy.Fix16(0.05)
-    assert inst.chorus_max_frequency == structy.Fix16(0.2)
-    assert inst.knob_offset_corr == structy.Fix16(0.0)
-    assert inst.knob_gain_corr == structy.Fix16(1.0)
-    assert inst.smooth_initial_gain == structy.Fix16(0.1)
-    assert inst.smooth_sensitivity == structy.Fix16(30.0)
+    assert inst.castor_knob_min == fix16.Fix16(-1.01)
+    assert inst.castor_knob_max == fix16.Fix16(1.01)
+    assert inst.pollux_knob_min == fix16.Fix16(-1.01)
+    assert inst.pollux_knob_max == fix16.Fix16(1.01)
+    assert inst.chorus_max_intensity == fix16.Fix16(0.05)
+    assert inst.chorus_max_frequency == fix16.Fix16(0.2)
+    assert inst.knob_offset_corr == fix16.Fix16(0.0)
+    assert inst.knob_gain_corr == fix16.Fix16(1.0)
+    assert inst.smooth_initial_gain == fix16.Fix16(0.1)
+    assert inst.smooth_sensitivity == fix16.Fix16(30.0)
     assert inst.pollux_follower_threshold == 56
     assert inst.castor_lfo_pwm is False
     assert inst.pollux_lfo_pwm is False

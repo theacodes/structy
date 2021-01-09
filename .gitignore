@@ -3,3 +3,4 @@ __pycache__/
 a.out
 *.o
 *.s
+.coverage

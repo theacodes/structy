@@ -1,11 +1,15 @@
+/*
+    Copyright (c) 2021 Alethea Katherine Flowers.
+    Published under the standard MIT License.
+    Full text available at: https://opensource.org/licenses/MIT
+*/
+
 #pragma once
 
-/* TODO: License header. */
-
-#include <stdbool.h>
-#include <stdint.h>
-#include <stddef.h>
 #include "structy_config_.h"
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 
 /* Structy's core pack and unpack routines are based on Python's struct module.
 

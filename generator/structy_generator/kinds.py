@@ -1,3 +1,8 @@
+# Copyright (c) 2021 Alethea Katherine Flowers.
+# Published under the standard MIT License.
+# Full text available at: https://opensource.org/licenses/MIT
+
+
 class Kind:
     name = "unknown"
     c_type = "unknown"
@@ -7,6 +12,7 @@ class Kind:
     pack = "x"
 
     c_includes = None
+    py_includes = None
 
     @classmethod
     def c_value(cls, value):
@@ -98,11 +104,12 @@ class Fixed16Kind(Kind):
     name = "fix16"
     c_type = "fix16_t"
     c_format = "0x%08x"
-    py_type = "structy.Fix16"
+    py_type = "fix16.Fix16"
     js_type = ""
     pack = "i"
 
-    c_includes = '#include "fix16.h"'
+    c_includes = ['#include "fix16.h"']
+    py_includes = ["import fix16"]
 
     @classmethod
     def c_value(cls, value):
@@ -110,7 +117,7 @@ class Fixed16Kind(Kind):
 
     @classmethod
     def py_value(cls, value):
-        return f"structy.Fix16({value})"
+        return f"fix16.Fix16({value})"
 
     @classmethod
     def c_printer(cls, field):

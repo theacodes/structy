@@ -1,3 +1,9 @@
+/*
+    Copyright (c) 2021 Alethea Katherine Flowers.
+    Published under the standard MIT License.
+    Full text available at: https://opensource.org/licenses/MIT
+*/
+
 #pragma GCC diagnostic ignored "-Wdouble-promotion"
 
 #include "gemsettings.h"
@@ -148,8 +154,9 @@ const uint8_t generated_ref_data[] = {
 };
 // clang-format on
 
-static_assert(sizeof(generated_ref_data) / sizeof(uint8_t) == GEMSETTINGS_PACKED_SIZE, "Reference data must match struct packed size.");
-
+static_assert(
+    sizeof(generated_ref_data) / sizeof(uint8_t) == GEMSETTINGS_PACKED_SIZE,
+    "Reference data must match struct packed size.");
 
 MunitResult test_generated_pack(const MunitParameter params[], void* data) {
     (void)params;
@@ -196,7 +203,8 @@ MunitResult test_generated_unpack(const MunitParameter params[], void* data) {
     return MUNIT_OK;
 }
 
-const char reference_print_output[] = "\
+const char reference_print_output[] =
+    "\
 Struct GemSettings:\n\
 - adc_gain_corr: 2048\n\
 - adc_offset_corr: 0\n\
@@ -215,7 +223,6 @@ Struct GemSettings:\n\
 - castor_lfo_pwm: 0\n\
 - pollux_lfo_pwm: 0\n\
 - test_field: 0\n";
-
 
 MunitResult test_generated_print(const MunitParameter params[], void* data) {
     (void)params;
