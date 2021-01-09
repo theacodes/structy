@@ -1,0 +1,5 @@
+.nox
+__pycache__/
+a.out
+*.o
+*.s
