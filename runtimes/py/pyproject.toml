@@ -1,0 +1,10 @@
+[build-system]
+requires = ["flit_core >=2,<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.metadata]
+module = "structy"
+author = "Alethea Katherine Flowers"
+author-email = "thea@winterbloom.com"
+home-page = "https://github.com/theacodes/structy"
+classifiers = ["License :: OSI Approved :: MIT License"]

@@ -22,7 +22,7 @@ def format(session):
 @nox.session
 def pytests(session):
     session.install(
-        "./generator", "pytest", "pytest-cov", "flake8==3.8.4", "mypy==0.790"
+        "./generator", "./runtimes/py", "pytest", "pytest-cov", "flake8==3.8.4", "mypy==0.790"
     )
     session.run(
         "structy", "-l", "py", "tests/resources/gemsettings.structy", "tests/py"
@@ -34,7 +34,7 @@ def pytests(session):
         "--cov-report",
         "term-missing",
         "--cov",
-        "runtimes/py",
+        "structy",
         "--cov",
         "tests/py",
         "tests/py",

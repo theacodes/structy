@@ -2,7 +2,7 @@
 # Published under the standard MIT License.
 # Full text available at: https://opensource.org/licenses/MIT
 
-import fix16
+from structy import fix16
 
 
 class TestFix16:

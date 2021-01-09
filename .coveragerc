@@ -5,3 +5,8 @@ branch = True
 exclude_lines =
     pragma: no cover
     if _typing.TYPE_CHECKING:
+
+[paths]
+source =
+   runtimes/py
+   .nox/*/lib/*/site-packages

@@ -16,7 +16,7 @@ import mmap
 from typing import Any, Union, ByteString, List, ClassVar, Type
 
 try:
-    import fix16
+    from structy import fix16
 except ImportError:  # pragma: no cover
     fix16 = None  # type: ignore
 

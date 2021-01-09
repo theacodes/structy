@@ -124,7 +124,7 @@ Structy's Python implementation is written to be simple, not fast. Some notes:
 
 ### Including Structy's runtime
 
-The runtime is included with the `structy_generator` package. It's import name is `structy`.
+The runtime can be installed by installing the `structy` package.
 
 
 ### Using generated code
