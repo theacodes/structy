@@ -4,6 +4,23 @@ import nox
 
 
 @nox.session
+def format(session):
+    session.install("black==20.8b1")
+    session.run("black", "noxfile.py", "runtimes/py", "tests/py", "generator")
+
+
+@nox.session
+def pytests(session):
+    session.install("./generator", "pytest", "flake8==3.8.4", "mypy==0.790")
+    session.run(
+        "structy", "-l", "py", "tests/resources/gemsettings.structy", "tests/py"
+    )
+    session.run("mypy", "runtimes/py", "tests/py")
+    session.run("flake8", "runtimes/py", "tests/py")
+    session.run("pytest", "tests/py")
+
+
+@nox.session
 def ctests(session):
     runtime_headers = glob("runtimes/c/*.h")
     runtime_sources = glob("runtimes/c/*.c")
@@ -36,7 +53,7 @@ def ctests(session):
         "-Winit-self",
         "-Wdouble-promotion",
         "-std=c17",
-        #"-g",
+        # "-g",
         "-O2",
         "-isystem pthird_party/munit",
         "-Ithird_party/munit",

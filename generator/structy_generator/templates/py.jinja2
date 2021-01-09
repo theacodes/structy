@@ -1,0 +1,18 @@
+from dataclasses import dataclass
+from typing import ClassVar
+
+import structy
+
+
+@dataclass
+class {{struct.name}}(structy.Struct):
+    _PACK_STRING : ClassVar[str] = "{{struct.pack_string}}"
+
+    PACKED_SIZE : ClassVar[int] = {{struct.packed_size}}
+    """The total size of the struct once packed."""
+{% for field in struct.fields: %}
+    {{field.name}}: {{field.kind.py_type}} = {{field.kind.py_value(field.value)}}
+{%- if field.docstring %}
+    """{{field.docstring|indent()}}"""
+{%- endif %}
+{% endfor -%}

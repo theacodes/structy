@@ -3,7 +3,7 @@ requires = ["flit_core >=2,<4"]
 build-backend = "flit_core.buildapi"
 
 [tool.flit.metadata]
-module = "structy"
+module = "structy_generator"
 author = "Alethea Katherine Flowers"
 author-email = "thea@winterbloom.com"
 home-page = "https://github.com/theacodes/structy"
@@ -11,4 +11,5 @@ classifiers = ["License :: OSI Approved :: MIT License"]
 requires = ["jinja2"]
 
 [tool.flit.scripts]
-structy = "structy.__main__:main"
+structy = "structy_generator.__main__:main"
+structy_generator = "structy_generator.__main__:main"

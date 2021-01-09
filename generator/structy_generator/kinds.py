@@ -1,4 +1,3 @@
-
 class Kind:
     name = "unknown"
     c_type = "unknown"
@@ -19,10 +18,16 @@ class Kind:
 
     @classmethod
     def c_printer(cls, field):
-        return f"STRUCTY_PRINTF(\"- {field}: {cls.c_format}\\n\", inst->{field});"
+        return f'STRUCTY_PRINTF("- {field}: {cls.c_format}\\n", inst->{field});'
 
 
-class Uint8Kind(Kind):
+class _IntegerKind(Kind):
+    @classmethod
+    def py_value(cls, value):
+        return value if value else 0
+
+
+class Uint8Kind(_IntegerKind):
     name = "uint8"
     c_type = "uint8_t"
     c_format = "%u"
@@ -30,7 +35,8 @@ class Uint8Kind(Kind):
     js_type = ""
     pack = "B"
 
-class Uint16Kind(Kind):
+
+class Uint16Kind(_IntegerKind):
     name = "uint16"
     c_type = "uint16_t"
     c_format = "%u"
@@ -38,7 +44,8 @@ class Uint16Kind(Kind):
     js_type = ""
     pack = "H"
 
-class Uint32Kind(Kind):
+
+class Uint32Kind(_IntegerKind):
     name = "uint32"
     c_type = "uint32_t"
     c_format = "%u"
@@ -46,7 +53,8 @@ class Uint32Kind(Kind):
     js_type = ""
     pack = "I"
 
-class Int8Kind(Kind):
+
+class Int8Kind(_IntegerKind):
     name = "int8"
     c_type = "int8_t"
     c_format = "%d"
@@ -54,7 +62,8 @@ class Int8Kind(Kind):
     js_type = ""
     pack = "b"
 
-class Int16Kind(Kind):
+
+class Int16Kind(_IntegerKind):
     name = "int16"
     c_type = "int16_t"
     c_format = "%d"
@@ -62,13 +71,15 @@ class Int16Kind(Kind):
     js_type = ""
     pack = "h"
 
-class Int32Kind(Kind):
+
+class Int32Kind(_IntegerKind):
     name = "int32"
     c_type = "int32_t"
     c_format = "%d"
     py_type = "int"
     js_type = ""
     pack = "i"
+
 
 class BoolKind(Kind):
     name = "bool"
@@ -82,6 +93,7 @@ class BoolKind(Kind):
     def c_value(cls, value):
         return "true" if value else "false"
 
+
 class Fixed16Kind(Kind):
     name = "fix16"
     c_type = "fix16_t"
@@ -90,7 +102,7 @@ class Fixed16Kind(Kind):
     js_type = ""
     pack = "i"
 
-    c_includes = "#include \"fix16.h\""
+    c_includes = '#include "fix16.h"'
 
     @classmethod
     def c_value(cls, value):
@@ -109,9 +121,12 @@ class Fixed16Kind(Kind):
     STRUCTY_PRINTF(\"- {field}: %s\\n\", fix16buf);
 }}"""
 
+
+def _all_subclasses(cls):
+    return set(cls.__subclasses__()).union(
+        [s for c in cls.__subclasses__() for s in _all_subclasses(c)]
+    )
+
+
 def get_kinds():
-    return {
-        cls.name: cls
-        for cls
-        in Kind.__subclasses__()
-    }
+    return {cls.name: cls for cls in _all_subclasses(Kind)}

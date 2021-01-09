@@ -1,7 +1,7 @@
 import ast
 import struct
 
-import structy.kinds
+import structy_generator.kinds
 
 
 class StructyStruct:
@@ -11,8 +11,8 @@ class StructyStruct:
 
     @property
     def pack_string(self):
-        return ''.join(field.kind.pack for field in self.fields)
-    
+        return "".join(field.kind.pack for field in self.fields)
+
     @property
     def packed_size(self):
         return struct.Struct(">" + self.pack_string).size
@@ -22,7 +22,7 @@ class StructyStruct:
         out = {}
         for field in self.fields:
             out[field.kind] = None
-        
+
         return out.keys()
 
     def __repr__(self):
@@ -32,7 +32,7 @@ class StructyStruct:
 class StructField:
     def __init__(self, name, kind, value, docstring):
         self.name = name
-        self.kind = structy.kinds.get_kinds()[kind]
+        self.kind = structy_generator.kinds.get_kinds()[kind]
         self.value = value
         self.docstring = docstring
 
@@ -59,7 +59,7 @@ class StructyVisitor(ast.NodeVisitor):
                 name=node.target.id,
                 kind=node.annotation.id,
                 value=ast.literal_eval(node.value) if node.value is not None else None,
-                docstring=self.docstring
+                docstring=self.docstring,
             )
         )
         self.docstring = None
@@ -67,7 +67,7 @@ class StructyVisitor(ast.NodeVisitor):
     def visit_Expr(self, node):
         if not isinstance(node.value, ast.Str):
             return
-        
+
         self.docstring = node.value.s
 
 
