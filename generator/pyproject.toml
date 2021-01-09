@@ -9,6 +9,7 @@ author-email = "thea@winterbloom.com"
 home-page = "https://github.com/theacodes/structy"
 classifiers = ["License :: OSI Approved :: MIT License"]
 requires = ["jinja2"]
+description-file = "README.md"
 
 [tool.flit.scripts]
 structy = "structy_generator.__main__:main"
