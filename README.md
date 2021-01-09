@@ -12,6 +12,8 @@ Explicit non-goals:
 
 > Be fast, be clever
 
+If you want something far more thought out and comprehensive I'd suggest checking out things like [Kaitai Struct](https://kaitai.io/).
+
 ## Using structy
 
 Like protobuf and other complicated data exchange libraries, structy uses a *schema*. Structy's schemas use Python's syntax (so it can be lazy and re-use Python's parser):
@@ -23,10 +25,11 @@ class UserSettings:
     user_id : uint32
 ```
 
-With this nonsense you can run structy's "compiler" to generate C, JavaScript, and Python code for this "struct".
+With this nonsense you can run structy's generator to generate C, JavaScript, and Python code for this "struct".
 
 ```bash
-structy user_settings.schema --c generated
+$ python3 -m pip install structy
+$ structy user_settings.schema --c generated
 ```
 
 For C, you can import and use this struct just like a normal struct:
@@ -116,7 +119,7 @@ By default, Structy will try to use `<stdio.h>`'s `printf` if you're on a big gi
 
 ## Python implementation
 
-Structy's Python implementation is written to be simple, not fast. Some notes:
+Structy's Python implementation is written to be simple, not fast or "powerful" or whatever. Some notes:
 
 - The runtime depends on Python 3.7+
 - The runtime uses type annotations heavily.
@@ -124,12 +127,17 @@ Structy's Python implementation is written to be simple, not fast. Some notes:
 
 ### Including Structy's runtime
 
-The runtime can be installed by installing the `structy` package.
+The runtime can be installed by installing the `structy` package:
+
+```bash
+$ python3 -m pip install structy
+```
 
 
 ### Using generated code
 
 The Structy generates the struct as a [dataclass](https://docs.python.org/3/library/dataclasses.html) in its own module.
+
 
 ### Initialization
 
@@ -160,7 +168,38 @@ Unpacks the `bytes`-like buffer into a new instance. The buffer must be at least
 
 ### Print
 
-Since a Structy Struct is just a dataclass, it uses the [dataclass __str__ and __repr__](https://docs.python.org/3/reference/datamodel.html#object.__repr__).
+Since a Structy Struct is just a dataclass, it uses the [dataclass \_\_str__ and \_\_repr__](https://docs.python.org/3/reference/datamodel.html#object.__repr__).
+
+
+## FAQ
+
+> Does Structy support arrays/lists?
+
+No, Struct structs must be a deterministic length when encoded.
+
+> How about bitfields?
+
+No yet, but it could. I'm just too lazy.
+
+> Little-endian? Mixed-endianess?
+
+No. Supporting anything other than big-endian would complicate the C runtime and I don't want to do that. Idk, maybe I could be talked into accepting a PR for it.
+
+> Custom types?
+
+No, but it's possible in the future. There's a little bit of this thought out because Struct supports Q16.16 fixed-point values.
+
+> Nested structs?
+
+No, but it could be added. I just haven't needed it yet.
+
+> Why does structy use `snake_case` for properties and methods even in C and JS where it's common to use `lowerCamelCase`? 
+
+Mostly because I want data access to be identical in all languages, but also because I deeply, deeply, hate `lowerCamelCase`. I find it hard to read.
+
+## Support / issues / etc
+
+Unlike some of my other open-source projects, this project was made with one user in mind: me. I made it open source in case someone else finds it useful but I am not in the business of supporting this project. If you run into issues or need help feel free to submit an issue on GitHub, however, please know that I do not feel any obligation to support this project.
 
 ## License
 
