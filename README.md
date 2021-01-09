@@ -44,7 +44,7 @@ struct UserSettings settings = {
 };
 ```
 
-But it also creates the initialization (`UserSettings_initialize`), serialization (`UserSettings_pack`), and deserialization (`UserSettings_initialize`) functions needed for the struct.
+But it also creates the initialization (`UserSettings_init`), serialization (`UserSettings_pack`), and deserialization (`UserSettings_unpack`) functions needed for the struct.
 
 ## C implementation
 
