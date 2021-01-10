@@ -112,20 +112,15 @@ class Fixed16Kind(Kind):
     name = "fix16"
     c_type = "fix16_t"
     c_format = "0x%08x"
-    py_type = "structy.fix16.Fix16"
+    py_type = "structy.Fix16"
     js_type = ""
     pack = "i"
 
     c_includes = ['#include "fix16.h"']
-    py_includes = ["import structy.fix16"]
 
     @classmethod
     def c_value(cls, value):
         return f"F16({value})"
-
-    @classmethod
-    def py_value(cls, value):
-        return f"structy.fix16.Fix16({value})"
 
     @classmethod
     def c_printer(cls, field):

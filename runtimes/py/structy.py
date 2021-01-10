@@ -10,38 +10,46 @@ provides runtime support for Structy-generated classes.
 
 from __future__ import annotations
 
+__version__ = "2020.10.9.1"
+
+
 import dataclasses
 import struct
 import mmap
 from typing import Any, Union, ByteString, List, ClassVar, Type
 
-try:
-    from structy import fix16
-except ImportError:  # pragma: no cover
-    fix16 = None  # type: ignore
-
 _StructBuffer = Union[bytearray, memoryview, mmap.mmap]
 
 
-def _packed_fields(inst: Union[Type[Struct], Struct]) -> List[str]:
-    return [field.name for field in dataclasses.fields(inst)]
+def _packed_fields(inst: Union[Type[Struct], Struct]) -> List[dataclasses.Field]:
+    return [field for field in dataclasses.fields(inst)]
 
 
-def _unpack_fix16_fields(cls: Type, kwargs: Any):
-    if fix16 is None:  # pragma: no cover
-        return
+def _pack_fix16_fields(self: Struct, values: Any) -> None:
+    fix16_fields = [field.name for field in _packed_fields(self) if field.type == Fix16]
 
-    # While python's `__index__` protocol helps serialize fix16 types,
-    # we have to manually convert them when deserializing.
-    fix16_fields = [
-        field.name for field in dataclasses.fields(cls) if field.type == fix16.Fix16
-    ]
+    for field in fix16_fields:
+        value = values[field] * 0x00010000
+        value += 0.5 if value >= 0 else -0.5
+        values[field] = int(value)
+
+
+def _unpack_fix16_fields(cls: Type, kwargs: Any) -> None:
+    fix16_fields = [field.name for field in _packed_fields(cls) if field.type == Fix16]
 
     for field in fix16_fields:
         value = kwargs[field]
-        f16_value = fix16.Fix16(0)
-        f16_value._value = value
-        kwargs[field] = f16_value
+        kwargs[field] = float(value) / 0x00010000
+
+
+# This bullshit is just to appease mypy. Fuckin' mypy, curse you for being useful.
+
+
+class _Fix16:
+    pass
+
+
+Fix16 = Union[float, _Fix16]
 
 
 class Struct:
@@ -56,9 +64,13 @@ class Struct:
 
     def pack_into(self, *, buffer: _StructBuffer, offset: int) -> None:
         """Packs this struct's data into the given buffer at the given offset."""
-        values = [getattr(self, field) for field in _packed_fields(self)]
+        values = {
+            field.name: getattr(self, field.name) for field in _packed_fields(self)
+        }
 
-        struct.pack_into(">" + self._PACK_STRING, buffer, offset, *values)
+        _pack_fix16_fields(self, values)
+
+        struct.pack_into(">" + self._PACK_STRING, buffer, offset, *values.values())
 
     def pack(self) -> ByteString:
         """Packs this struct's data into a new ByteString."""
@@ -70,7 +82,7 @@ class Struct:
     def unpack_from(cls: Type[Struct], *, buffer: _StructBuffer, offset: int) -> Struct:
         """Creates a new struct with the data unpacked from the given buffer at the given offset."""
         values = struct.unpack_from(">" + cls._PACK_STRING, buffer, offset)
-        kwargs = dict(zip(_packed_fields(cls), values))
+        kwargs = dict(zip([field.name for field in _packed_fields(cls)], values))
 
         _unpack_fix16_fields(cls, kwargs)
 

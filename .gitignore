@@ -4,3 +4,4 @@ a.out
 *.o
 *.s
 .coverage
+dist/

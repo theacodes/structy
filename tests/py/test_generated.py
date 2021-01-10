@@ -2,7 +2,7 @@
 # Published under the standard MIT License.
 # Full text available at: https://opensource.org/licenses/MIT
 
-from structy import fix16
+import math
 
 import gemsettings
 
@@ -91,22 +91,25 @@ def test_generated_pack():
     assert bytearray(output) == REF_DATA
 
 
+TOLERANCE = 1e-03
+
+
 def test_generated_unpack():
     inst = gemsettings.GemSettings.unpack(REF_DATA)
 
     assert inst.adc_gain_corr == 2048
     assert inst.adc_offset_corr == 0
     assert inst.led_brightness == 127
-    assert inst.castor_knob_min == fix16.Fix16(-1.01)
-    assert inst.castor_knob_max == fix16.Fix16(1.01)
-    assert inst.pollux_knob_min == fix16.Fix16(-1.01)
-    assert inst.pollux_knob_max == fix16.Fix16(1.01)
-    assert inst.chorus_max_intensity == fix16.Fix16(0.05)
-    assert inst.chorus_max_frequency == fix16.Fix16(0.2)
-    assert inst.knob_offset_corr == fix16.Fix16(0.0)
-    assert inst.knob_gain_corr == fix16.Fix16(1.0)
-    assert inst.smooth_initial_gain == fix16.Fix16(0.1)
-    assert inst.smooth_sensitivity == fix16.Fix16(30.0)
+    assert math.isclose(inst.castor_knob_min, -1.01, rel_tol=TOLERANCE)
+    assert math.isclose(inst.castor_knob_max, 1.01, rel_tol=TOLERANCE)
+    assert math.isclose(inst.pollux_knob_min, -1.01, rel_tol=TOLERANCE)
+    assert math.isclose(inst.pollux_knob_max, 1.01, rel_tol=TOLERANCE)
+    assert math.isclose(inst.chorus_max_intensity, 0.05, rel_tol=TOLERANCE)
+    assert math.isclose(inst.chorus_max_frequency, 0.2, rel_tol=TOLERANCE)
+    assert math.isclose(inst.knob_offset_corr, 0.0, rel_tol=TOLERANCE)
+    assert math.isclose(inst.knob_gain_corr, 1.0, rel_tol=TOLERANCE)
+    assert math.isclose(inst.smooth_initial_gain, 0.1, rel_tol=TOLERANCE)
+    assert math.isclose(inst.smooth_sensitivity, 30.0, rel_tol=TOLERANCE)
     assert inst.pollux_follower_threshold == 56
     assert inst.castor_lfo_pwm is False
     assert inst.pollux_lfo_pwm is False
