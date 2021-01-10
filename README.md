@@ -178,7 +178,7 @@ Structy's JavaScript implementation, like the others, is intended to be simple. 
 
 - It's implemented as a [JavaScript module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules).
 - It's meant to be used in a web browser. It also works with [Deno](https://deno.land/), but I only use Deno for testing.
-* It's implemented using [Javascript classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes) and uses *public static members* which means [Safari will probably be a dick about it](https://bugs.webkit.org/show_bug.cgi?id=194095) until like Safari 14.1 or 15, who the heck knows?
+- It's implemented using [Javascript classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes) and uses *public static members* which means [Safari will probably be a dick about it](https://bugs.webkit.org/show_bug.cgi?id=194095) until like Safari 14.1 or 15, who the heck knows?
 
 
 ### Including Structy's runtime
