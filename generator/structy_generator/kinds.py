@@ -16,11 +16,15 @@ class Kind:
 
     @classmethod
     def c_value(cls, value):
-        return 0 if value is None else value
+        return value if value is not None else 0
 
     @classmethod
     def py_value(cls, value):
         return value
+
+    @classmethod
+    def js_value(cls, value):
+        return value if value is not None else "null"
 
     @classmethod
     def c_printer(cls, field):
@@ -97,6 +101,10 @@ class BoolKind(Kind):
 
     @classmethod
     def c_value(cls, value):
+        return "true" if value else "false"
+
+    @classmethod
+    def js_value(cls, value):
         return "true" if value else "false"
 
 

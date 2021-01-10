@@ -17,12 +17,18 @@ def format(session):
         *glob("runtimes/c/*.h"),
         external=True,
     )
+    session.run("deno", "fmt", "tests/js", "runtimes/js", external=True)
 
 
 @nox.session
 def pytests(session):
     session.install(
-        "./generator", "./runtimes/py", "pytest", "pytest-cov", "flake8==3.8.4", "mypy==0.790"
+        "./generator",
+        "./runtimes/py",
+        "pytest",
+        "pytest-cov",
+        "flake8==3.8.4",
+        "mypy==0.790",
     )
     session.run(
         "structy", "-l", "py", "tests/resources/gemsettings.structy", "tests/py"
@@ -88,3 +94,22 @@ def ctests(session):
         external=True,
     )
     session.run("ctests")
+
+
+@nox.session
+def jstests(session):
+    session.install("./generator")
+    session.run(
+        "structy", "-l", "js", "tests/resources/gemsettings.structy", "tests/js"
+    )
+    session.chdir("tests/js")
+    session.run("deno", "fmt", "--check", external=True)
+    session.run(
+        "deno",
+        "test",
+        "--unstable",
+        "--import-map",
+        "import_map.json",
+        "tests.js",
+        external=True,
+    )

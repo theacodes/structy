@@ -1,0 +1,6 @@
+{
+    "imports": {
+      "./structy.js": "../../runtimes/js/structy.js",
+      "../../runtimes/js/struct.mjs": "https://raw.githubusercontent.com/lyngklip/structjs/master/struct.mjs"
+    }
+ }

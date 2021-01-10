@@ -48,8 +48,7 @@ struct StructyResult GemSettings_pack(const struct GemSettings* inst, uint8_t* b
         inst->pollux_follower_threshold,
         inst->castor_lfo_pwm,
         inst->pollux_lfo_pwm,
-        inst->test_field
-    );
+        inst->test_field);
 }
 
 struct StructyResult GemSettings_unpack(struct GemSettings* inst, const uint8_t* buf) {
@@ -73,8 +72,7 @@ struct StructyResult GemSettings_unpack(struct GemSettings* inst, const uint8_t*
         &inst->pollux_follower_threshold,
         &inst->castor_lfo_pwm,
         &inst->pollux_lfo_pwm,
-        &inst->test_field
-    );
+        &inst->test_field);
 }
 
 void GemSettings_print(const struct GemSettings* inst) {

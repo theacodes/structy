@@ -10,9 +10,9 @@ import structy.fix16
 
 @dataclass
 class GemSettings(structy.Struct):
-    _PACK_STRING : ClassVar[str] = "HhHiiiiiiiiiiH??i"
+    _PACK_STRING: ClassVar[str] = "HhHiiiiiiiiiiH??i"
 
-    PACKED_SIZE : ClassVar[int] = 54
+    PACKED_SIZE: ClassVar[int] = 54
     """The total size of the struct once packed."""
 
     adc_gain_corr: int = 2048

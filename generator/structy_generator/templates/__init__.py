@@ -28,9 +28,17 @@ class PyTemplates:
         }
 
 
+class JSTemplates:
+    def render(self, struct_name, **kwargs):
+        return {
+            f"{struct_name}.js": _templates["js"].render(**kwargs),
+        }
+
+
 templates = {
     "c": CTemplates(),
     "py": PyTemplates(),
+    "js": JSTemplates(),
 }
 
 
