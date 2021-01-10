@@ -1,3 +1,9 @@
+/*
+    Copyright (c) 2021 Alethea Katherine Flowers.
+    Published under the standard MIT License.
+    Full text available at: https://opensource.org/licenses/MIT
+*/
+
 import _struct from "./struct.mjs";
 
 class Struct {
@@ -16,7 +22,7 @@ class Struct {
   }
 
   pack() {
-    let values = [];
+    const values = [];
 
     for (const field of this.constructor._fields) {
       if (field.kind == "fix16") {
@@ -35,8 +41,8 @@ class Struct {
       buf = buf.buffer;
     }
 
-    let unpacked = this._struct.unpack(buf);
-    let result = new this();
+    const unpacked = this._struct.unpack(buf);
+    const result = new this();
 
     for (const field of this._fields) {
       if (field.kind == "fix16") {

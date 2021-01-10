@@ -1,3 +1,11 @@
+/*
+    Copyright (c) 2021 Alethea Katherine Flowers.
+    Published under the standard MIT License.
+    Full text available at: https://opensource.org/licenses/MIT
+*/
+
+// deno-lint-ignore-file camelcase
+
 import { assertEquals } from "https://deno.land/std@0.83.0/testing/asserts.ts";
 import Struct from "./structy.js";
 import GemSettings from "./gemsettings.js";
@@ -60,11 +68,11 @@ Deno.test("Fixed16 roundtrip", () => {
     }
   }
 
-  let inst = new Fix16Struct({ fvalue: 66.2 });
+  const inst = new Fix16Struct({ fvalue: 66.2 });
   assertEquals(inst.fvalue, 66.2);
 
   const packed = inst.pack();
-  let inst2 = Fix16Struct.unpack(packed);
+  const inst2 = Fix16Struct.unpack(packed);
   assertEquals(inst2.fvalue.toFixed(1), "66.2");
 });
 

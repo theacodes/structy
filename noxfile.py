@@ -104,6 +104,7 @@ def jstests(session):
     )
     session.chdir("tests/js")
     session.run("deno", "fmt", "--check", external=True)
+    session.run("deno", "lint", "--unstable", ".", "../../runtimes/js", external=True)
     session.run(
         "deno",
         "test",
