@@ -16,7 +16,17 @@ class Struct {
   }
 
   pack() {
-    let values = this.constructor._fields.map((field) => this[field.name]);
+    let values = [];
+
+    for (const field of this.constructor._fields) {
+      if (field.kind == "fix16") {
+        let val = this[field.name] * 0x00010000;
+        val += (val >= 0) ? 0.5 : -0.5;
+        values.push(val);
+      } else {
+        values.push(this[field.name]);
+      }
+    }
     return new Uint8Array(this.constructor._struct.pack(...values));
   }
 
@@ -29,7 +39,11 @@ class Struct {
     let result = new this();
 
     for (const field of this._fields) {
-      result[field.name] = unpacked.shift();
+      if (field.kind == "fix16") {
+        result[field.name] = unpacked.shift() / 0x00010000;
+      } else {
+        result[field.name] = unpacked.shift();
+      }
     }
 
     return result;
