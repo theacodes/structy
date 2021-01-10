@@ -122,8 +122,9 @@ By default, Structy will try to use `<stdio.h>`'s `printf` if you're on a big gi
 Structy's Python implementation is written to be simple, not fast or "powerful" or whatever. Some notes:
 
 - The runtime depends on Python 3.7+
-- The runtime uses type annotations heavily.
-- The runtime includes a very basic implementation of `Q16.16` fixed-point math called `fix16`. It's included because I often work with `libfixmath` on microcontrollers.
+- The runtime has complete type annotations.
+- The runtime supports converting floats between libfixmath's fix16 during packing & unpacking.
+- It's built on top of Python's excellent [struct](https://docs.python.org/3/library/struct.html) module.
 
 ### Including Structy's runtime
 
@@ -169,6 +170,68 @@ Unpacks the `bytes`-like buffer into a new instance. The buffer must be at least
 ### Print
 
 Since a Structy Struct is just a dataclass, it uses the [dataclass \_\_str__ and \_\_repr__](https://docs.python.org/3/reference/datamodel.html#object.__repr__).
+
+
+## JavaScript implementation
+
+Structy's JavaScript implementation, like the others, is intended to be simple. Here's some notes on it:
+
+- It's implemented as a [JavaScript module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules).
+- It's meant to be used in a web browser. It also works with [Deno](https://deno.land/), but I only use Deno for testing.
+* It's implemented using [Javascript classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes) and uses *public static members* which means [Safari will probably be a dick about it](https://bugs.webkit.org/show_bug.cgi?id=194095) until like Safari 14.1 or 15, who the heck knows?
+
+
+### Including Structy's runtime
+
+The runtime is a single file located at [runtimes/js/structy.js](runtimes/js/structy.js). There's no Node/npm package because the last time I used npm my nose suddenly starting bleeding and I passed out and woke up with several mysterious lesions, and the last time I used Node.js I managed to somehow unleash a 10,000 year-old minor demon who's currently causing minor chaos by removing stop signs in low-traffic rural areas.
+
+So just copy it into your project next to wherever you're going to place the generated code, like we did when the web was young. If you're lazy (and you probably are), just run this:
+
+```bash
+$ wget https://raw.githubusercontent.com/theacodes/structy/runtimes/js/structy.js
+$ wget https://raw.githubusercontent.com/theacodes/structy/third_party/struct.js/struct.mjs
+```
+
+Those commands also copy in the one dependency: the excellent and tiny [struct.js](https://github.com/lyngklip/structjs) module- yes, I know it's confusing to have `structy.js` and `stuct.js`, but get over it. `struct.js` implements Python [struct](https://docs.python.org/3/library/struct.html) module in JavaScript which is great because I can write less code.
+
+### Using generated code
+
+The Structy generates the struct as a nice class in its own module. The module's only export is the class, so you can import it like this:
+
+```html
+<script type="module">
+import StructName from "./structname.js";
+</script>
+```
+
+
+### Initialization
+
+```js
+// Default values.
+inst = new StructName();
+// Override a default value by passing in an object
+inst = new StructName({field_name: something});
+```
+
+It's a JavaScript class so just use `new` to make an instance. It uses the pattern of passing in an object with field values so you can update fields without needing to specify all of them.
+
+### Pack
+
+```python
+result = inst.pack();
+```
+
+Packs an instance and returns a [Uint8Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array) object with the data. `result.length()` will be `StructName.packed_size`.
+
+### Unpack
+
+```python
+inst = StructName.unpack(data);
+```
+
+Unpacks the `Uint8Array` or `ArrayBuffer` into a new instance. The buffer must be at least `StructName.packed_size` long.
+
 
 
 ## FAQ
