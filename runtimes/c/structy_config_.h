@@ -37,7 +37,7 @@
 
 /* STRUCTY_ASSERT is used to make assertions when debug is active. */
 #ifndef STRUCTY_ASSERT
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(DEBUG) && !defined(NDEBUG) && !defined(__arm__)
 #include <assert.h>
 #define STRUCTY_ASSERT(...) assert(__VA_ARGS__)
 #else
