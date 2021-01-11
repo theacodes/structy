@@ -67,11 +67,11 @@ def ctests(session):
         "-Iruntimes/c",
         external=True,
     )
-    session.run(
-        "gcc",
+    gcc_args = [
         "-Werror",
         "-Wall",
         "-Wpedantic",
+        "-Wstrict-aliasing",
         "-Wextra",
         "-Wundef",
         "-Wsign-conversion",
@@ -80,15 +80,21 @@ def ctests(session):
         "-Winit-self",
         "-Wdouble-promotion",
         "-std=c17",
-        # "-g",
-        "-O2",
         "-isystem pthird_party/munit",
         "-Ithird_party/munit",
         "-Iruntimes/c",
         "-Itests/c",
         "third_party/munit/munit.c",
+    ]
+    gcc_sources = [
         *runtime_sources,
         *test_sources,
+    ]
+    session.run(
+        "gcc",
+        *gcc_args,
+        *gcc_sources,
+        "-O2",
         "-o",
         f"{session.bin}/ctests",
         external=True,
