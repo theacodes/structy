@@ -10,7 +10,7 @@ provides runtime support for Structy-generated classes.
 
 from __future__ import annotations
 
-__version__ = "2020.10.9.1"
+__version__ = "2021.2.27"
 
 
 import dataclasses
@@ -92,3 +92,8 @@ class Struct:
     def unpack(cls: Type[Struct], buffer: _StructBuffer) -> Struct:
         """Creates a new struct with the data unpacked from the given buffer."""
         return cls.unpack_from(buffer=buffer, offset=0)
+
+    def __str__(self):
+        pad_len = max(len(field.name) for field in _packed_fields(self)) + 3
+        fields = "\n".join(f"· {field.name + ':':{pad_len}} {getattr(self, field.name)!r}" for field in _packed_fields(self))
+        return f"{self.__class__.__name__}:\n{fields}"
