@@ -1,8 +1,8 @@
 # Structy
 
-Structy is an irresponsibly dumb and simple struct serialization/deserialization library for C, Python, and vanilla JavaScript. You can think of it like protobuf, thrift, flatbuffers, etc. but imagine that instead of a team of engineers maintaining it, it's instead written by a single moron.
+Structy is an irresponsibly dumb and simple serialization/deserialization library for C, Python, and vanilla JavaScript. You can think of it like protobuf, thrift, flatbuffers, etc. but imagine that instead of a team of engineers maintaining it, it's instead written by [a single moron](https://thea.codes).
 
-Structy was created to exchange data between C-based firmware on embedded devices and Python- and JavaScript-based programming, test, and calibration scripts running on a big-girl computer. As such, it's C implementation is designed specifically for embedded devices: it doesn't do any dynamic allocation and it doesn't have any fancy code for optimizations.
+Structy was created to exchange data between C-based firmware on embedded devices and Python- and JavaScript-based programming, test, and calibration scripts running on a big-girl computer. As such, its C implementation is designed specifically for embedded devices: it doesn't do any dynamic allocation and it doesn't have any fancy code for optimizations.
 
 Structy's design goals:
 
@@ -16,7 +16,7 @@ If you want something far more thought out and comprehensive I'd suggest checkin
 
 ## Using structy
 
-Like protobuf and other complicated data exchange libraries, structy uses a *schema*. Structy's schemas use Python's syntax (so it can be lazy and re-use Python's parser):
+Like protobuf and other complicated data exchange libraries, Structy uses a *schema*. Structy's schemas use Python's syntax (so it can be lazy and re-use Python's parser):
 
 ```python
 class UserSettings:
@@ -25,14 +25,14 @@ class UserSettings:
     user_id : uint32
 ```
 
-With this nonsense you can run structy's generator to generate C, JavaScript, and Python code for this "struct".
+With this nonsense you can run Structy's generator to generate C, JavaScript, and Python code for this "struct".
 
 ```bash
 $ python3 -m pip install structy
 $ structy user_settings.schema --c generated
 ```
 
-For C, you can import and use this struct just like a normal struct:
+For C, it just generates a normal struct. You can import it and use it just as you would any other struct:
 
 ```c
 #import "generated/user_settings.h"
@@ -44,7 +44,7 @@ struct UserSettings settings = {
 };
 ```
 
-But it also creates the initialization (`UserSettings_init`), serialization (`UserSettings_pack`), and deserialization (`UserSettings_unpack`) functions needed for the struct.
+It also creates functions for initialization of default values (`UserSettings_init`), serialization (`UserSettings_pack`), and deserialization (`UserSettings_unpack`).
 
 ## C implementation
 
@@ -54,18 +54,19 @@ Structy's C implementation is written specifically with microcontrollers in mind
 - **Never** uses the heap
 - Uses very very little stack space
 - Compiles cleanly with `-Werror -Wall -Wextra -Wpedantic -std=c17`
-- It includes optional support for `libfixmath`'s `fix16_t`.
+- It includes optional support for [`libfixmath`](https://github.com/PetteriAimonen/libfixmath)'s `fix16_t`.
 
 
 ### Including Structy's runtime
-You must include the files in `runtimes/c` in your project to use structy-generated c code.
+You must include the files in `runtimes/c` in your project to use Structy-generated C code.
 
 
 ### Using generated code
 
-The Structy generates the struct definition and four functions for use with the struct:
+Structy generates the struct definition and four functions for use with the struct:
 
 ### Initialization
+
 ```c
 void StructName_init(struct StructName* inst);
 ```
@@ -73,6 +74,7 @@ void StructName_init(struct StructName* inst);
 Initializes an instance of the struct with the default values specified in the struct's schema.
 
 ### Pack
+
 ```c
 struct StructyResult StructName_pack(const struct StructName* inst, uint8_t* buf);
 ```
@@ -137,19 +139,20 @@ $ python3 -m pip install structy
 
 ### Using generated code
 
-The Structy generates the struct as a [dataclass](https://docs.python.org/3/library/dataclasses.html) in its own module.
+Structy generates the struct as a [dataclass](https://docs.python.org/3/library/dataclasses.html) in its own module.
 
 
 ### Initialization
 
+Since it's a dataclass, an empty constructor gives each field the default value specified in the `.structy` definition file, but you can pass keyword arguments to override them:
+
 ```py
-# Default values.
+# Create an instance with default values for all fields.
 inst = StructName()
-# Override default value
+
+# Or, override fields with a custom value while creating an instance.
 inst = StructName(field_name=something)
 ```
-
-Since it's a dataclass, an empty constructor gives the default specified in the `.structy` definition file, but you can pass keyword arguments to override them.
 
 ### Pack
 
@@ -169,7 +172,14 @@ Unpacks the `bytes`-like buffer into a new instance. The buffer must be at least
 
 ### Print
 
-Since a Structy Struct is just a dataclass, it uses the [dataclass \_\_str__ and \_\_repr__](https://docs.python.org/3/reference/datamodel.html#object.__repr__).
+Structy does define a nice `__str__` method:
+
+```plaintext
+UserSettings:
+· brightness:   127
+· dark_mode:    False
+· user_id:      42
+```
 
 
 ## JavaScript implementation
@@ -183,7 +193,7 @@ Structy's JavaScript implementation, like the others, is intended to be simple. 
 
 ### Including Structy's runtime
 
-The runtime is a single file located at [runtimes/js/structy.js](runtimes/js/structy.js). There's no Node/npm package because the last time I used npm my nose suddenly starting bleeding and I passed out and woke up with several mysterious lesions, and the last time I used Node.js I managed to somehow unleash a 10,000 year-old minor demon who's currently causing minor chaos by removing stop signs in low-traffic rural areas.
+The runtime is a single file located at [runtimes/js/structy.js](runtimes/js/structy.js). There's no Node/NPM package because the last time I used NPM my nose suddenly starting bleeding and I passed out and woke up with several mysterious lesions, and the last time I used Node.js I managed to somehow unleash a 10,000 year-old demon who's currently causing minor chaos by removing stop signs in low-traffic rural areas.
 
 So just copy it into your project next to wherever you're going to place the generated code, like we did when the web was young. If you're lazy (and you probably are), just run this:
 
@@ -192,11 +202,11 @@ $ wget https://raw.githubusercontent.com/theacodes/structy/runtimes/js/structy.j
 $ wget https://raw.githubusercontent.com/theacodes/structy/third_party/struct.js/struct.mjs
 ```
 
-Those commands also copy in the one dependency: the excellent and tiny [struct.js](https://github.com/lyngklip/structjs) module- yes, I know it's confusing to have `structy.js` and `stuct.js`, but get over it. `struct.js` implements Python [struct](https://docs.python.org/3/library/struct.html) module in JavaScript which is great because I can write less code.
+Those commands also copy in the one dependency: the excellent and tiny [struct.js](https://github.com/lyngklip/structjs) module- yes, I know it's confusing to have `structy.js` and `struct.js`, but I'm sure you'll get used to it. `struct.js` implements Python [struct](https://docs.python.org/3/library/struct.html) module in JavaScript which is great because I can write less code.
 
 ### Using generated code
 
-The Structy generates the struct as a nice class in its own module. The module's only export is the class, so you can import it like this:
+Structy generates the struct as a nice class in its own module. The module's only export is the class, so you can import it like this:
 
 ```html
 <script type="module">
@@ -207,14 +217,15 @@ import StructName from "./structname.js";
 
 ### Initialization
 
+It's a JavaScript class so just use `new` to make an instance. It uses a [named parameter pattern](https://exploringjs.com/impatient-js/ch_callables.html#named-parameters) so you can set the value of individual fields during construction without needing to specify all of them:
+
 ```js
 // Default values.
 inst = new StructName();
-// Override a default value by passing in an object
+// Override a default value by passing in an object literal
 inst = new StructName({field_name: something});
 ```
 
-It's a JavaScript class so just use `new` to make an instance. It uses the pattern of passing in an object with field values so you can update fields without needing to specify all of them.
 
 ### Pack
 
@@ -250,13 +261,13 @@ No. Supporting anything other than big-endian would complicate the C runtime and
 
 > Custom types?
 
-No, but it's possible in the future. There's a little bit of this thought out because Struct supports Q16.16 fixed-point values.
+No, but it's possible in the future. There's a little bit of this thought out because Structy supports Q16.16 fixed-point values.
 
 > Nested structs?
 
 No, but it could be added. I just haven't needed it yet.
 
-> Why does structy use `snake_case` for properties and methods even in C and JS where it's common to use `lowerCamelCase`? 
+> Why does structy use `snake_case` for properties and methods even in C and JS where it's common to use `lowerCamelCase`?
 
 Mostly because I want data access to be identical in all languages, but also because I deeply, deeply, hate `lowerCamelCase`. I find it hard to read.
 
