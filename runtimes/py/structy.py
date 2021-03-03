@@ -10,7 +10,7 @@ provides runtime support for Structy-generated classes.
 
 from __future__ import annotations
 
-__version__ = "2021.2.27"
+__version__ = "2021.3.3"
 
 
 import dataclasses
