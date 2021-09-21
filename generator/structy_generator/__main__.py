@@ -36,7 +36,7 @@ def run(language: str, struct_file, destination_path: pathlib.Path):
     template = structy_generator.templates.template_for(language)
 
     if not destination_path.exists():
-        if os.isatty():
+        if sys.stdout.isatty():
             create = input(
                 f"Hey, {destination_path} doesn't exist, do want me to create it? (y/n)"
             )
