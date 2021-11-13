@@ -32,10 +32,10 @@ $ python3 -m pip install structy
 $ structy user_settings.schema --c generated
 ```
 
-For C, it just generates a normal struct. You can import it and use it just as you would any other struct:
+For C, it just generates a normal struct. You can include it and use it just as you would any other struct:
 
 ```c
-#import "generated/user_settings.h"
+#include "generated/user_settings.h"
 
 struct UserSettings settings = {
     .brightness = 127,
